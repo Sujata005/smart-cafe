@@ -19,6 +19,9 @@ const totalItems = cart?.reduce((sum, item) => sum + item.qty, 0) || 0;
         >
           Menu
         </button>
+        {/* <button onClick={() => setPage("reviews")}>
+          Reviews ⭐
+        </button> */}
         <button
           onClick={() => setPage("admin")}
           className="bg-black text-white px-4 py-2 rounded-lg"

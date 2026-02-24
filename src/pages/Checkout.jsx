@@ -1,8 +1,17 @@
+import { useState } from "react";
+
 const Checkout = ({ cart, totalPrice, setPage, setCart, setOrders }) => {
-const placeOrder = async () => {
+  const [customerName, setCustomerName] = useState("");
+  const [phone, setPhone] = useState("");
+  const placeOrder = async () => {
   try {
     console.log("🚀 Sending order...");
-
+    console.log("Sending order:", {
+      customerName,
+      phone,
+      cart,
+      totalPrice
+    });
     const response = await fetch("http://localhost:5000/order", {
       method: "POST",
       headers: {
@@ -11,16 +20,22 @@ const placeOrder = async () => {
       body: JSON.stringify({
         items: cart,
         total: totalPrice,
+        customerName,
+        phone
       }),
     });
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error("Server error");
+      alert(data.message);
+      return;
     }
 
-    alert("Order placed! 🎉");
+    alert(
+      `Order placed 🎉\nPoints: ${data.loyalty.points}\n` +
+      (data.loyalty.reward ? `Reward: ${data.loyalty.reward}` : "")
+    );
 
     setOrders((prev) => [...prev, data.order]);
 
@@ -56,6 +71,22 @@ const placeOrder = async () => {
           <span>Total</span>
           <span>₹{totalPrice}</span>
         </div>
+
+        <input
+          type="text"
+          placeholder="Your Name"
+          value={customerName}
+          onChange={(e) => setCustomerName(e.target.value)}
+          className="border p-2 rounded-lg w-full mb-2"
+        />
+
+        <input
+          type="text"
+          placeholder="Phone Number"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="border p-2 rounded-lg w-full mb-3"
+        />
 
         <button
           onClick={placeOrder}
