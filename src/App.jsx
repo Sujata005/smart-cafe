@@ -48,7 +48,7 @@ function App() {
   // ✅ Update order status
   const updateStatus = async (orderId, newStatus) => {
     try {
-      await fetch("http://localhost:5000/order/status", {
+      await fetch("https://smart-cafe-tiz3.onrender.com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
