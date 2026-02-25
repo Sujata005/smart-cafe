@@ -21,23 +21,21 @@ function App() {
   // ✅ Fetch orders (live sync)
   useEffect(() => {
     const fetchOrders = async () => {
-      try {
-        const res = await fetch("https://smart-cafe-tiz3.onrender.com");
-        const data = await res.json();
+    try {
+      const res = await fetch("https://smart-cafe-tiz3.onrender.com/orders");
+      const data = await res.json();
 
-        // 🔔 Sound alert for new order
-        if (data.length > lastOrderCount) {
-          const audio = new Audio("/notification.mp3");
-          audio.play();
-        }
-
-        setLastOrderCount(data.length);
-        setOrders(data);
-
-      } catch (err) {
-        console.error("Failed to fetch orders", err);
+      if (data.length > lastOrderCount) {
+        const audio = new Audio("/notification.mp3");
+        audio.play();
       }
-    };
+
+      setLastOrderCount(data.length);
+      setOrders(data);
+    } catch (err) {
+      console.error("Failed to fetch orders", err);
+    }
+  };
 
     fetchOrders();
     const interval = setInterval(fetchOrders, 3000);

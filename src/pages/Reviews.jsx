@@ -13,7 +13,7 @@ const Reviews = ({ setPage }) => {
         reviews.length
       ).toFixed(1);
   useEffect(() => {
-    fetch("https://smart-cafe-tiz3.onrender.com")
+    fetch("https://smart-cafe-tiz3.onrender.com/reviews")
       .then(res => res.json())
       .then(data => setReviews(data));
   }, []);

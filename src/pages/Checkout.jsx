@@ -12,7 +12,7 @@ const Checkout = ({ cart, totalPrice, setPage, setCart, setOrders }) => {
       cart,
       totalPrice
     });
-    const response = await fetch("https://smart-cafe-tiz3.onrender.com", {
+    const response = await fetch("https://smart-cafe-tiz3.onrender.com/order", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
