@@ -27,7 +27,7 @@ function App() {
 
       if (data.length > lastOrderCount) {
         const audio = new Audio("/notification.mp3");
-        audio.play();
+        audio.play().catch(() => {});
       }
 
       setLastOrderCount(data.length);
