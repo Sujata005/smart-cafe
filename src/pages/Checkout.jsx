@@ -12,7 +12,7 @@ const Checkout = ({ cart, totalPrice, setPage, setCart, setOrders }) => {
       cart,
       totalPrice
     });
-    const response = await fetch("http://localhost:5000/order", {
+    const response = await fetch("https://smart-cafe-tiz3.onrender.com", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

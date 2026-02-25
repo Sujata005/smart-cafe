@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("http://localhost:5000/orders");
+        const res = await fetch("https://smart-cafe-tiz3.onrender.com");
         const data = await res.json();
 
         // 🔔 Sound alert for new order

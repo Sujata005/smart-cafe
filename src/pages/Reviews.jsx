@@ -13,7 +13,7 @@ const Reviews = ({ setPage }) => {
         reviews.length
       ).toFixed(1);
   useEffect(() => {
-    fetch("http://localhost:5000/reviews")
+    fetch("https://smart-cafe-tiz3.onrender.com")
       .then(res => res.json())
       .then(data => setReviews(data));
   }, []);
@@ -24,7 +24,7 @@ const Reviews = ({ setPage }) => {
       return;
     }
 
-    const response = await fetch("http://localhost:5000/review", {
+    const response = await fetch("https://smart-cafe-tiz3.onrender.com", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, rating, comment })
