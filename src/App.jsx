@@ -86,7 +86,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-amber-50">
+    <div className="min-h-screen bg-amber-50 transition-all duration-500">
       <Navbar setPage={setPage} cart={cart} />
 
       {page === "home" && <Home setPage={setPage} />}
