@@ -12,7 +12,7 @@ function App() {
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
   const [lastOrderCount, setLastOrderCount] = useState(0);
-
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const totalPrice = cart.reduce(
     (sum, item) => sum + item.price * item.qty,
     0
