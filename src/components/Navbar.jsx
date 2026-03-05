@@ -22,13 +22,13 @@ const totalItems = cart?.reduce((sum, item) => sum + item.qty, 0) || 0;
         {/* <button onClick={() => setPage("reviews")}>
           Reviews ⭐
         </button> */}
-        <button
+        {/* <button
           onClick={() => setPage("admin")}
           className="bg-black text-white px-4 py-2 rounded-lg"
         >
           Admin Panel 👨‍🍳
-        </button>
-        <button
+        </button> */}
+        {/* <button
           onClick={() => setIsCartOpen(true)}
           className="relative bg-amber-900 text-white px-4 py-2 rounded-full hover:scale-105 transition"
         >
@@ -39,7 +39,7 @@ const totalItems = cart?.reduce((sum, item) => sum + item.qty, 0) || 0;
             className="bg-amber-900 text-white px-3 py-1 rounded-lg text-xs cursor-pointer"
         >
             Cart 🛒 {totalItems}
-        </div>
+        </div> */}
       </div>
     </nav>
   );
