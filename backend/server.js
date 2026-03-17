@@ -13,19 +13,32 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
 
-// Routes
+import reviewRoutes from "./routes/reviewRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+
+dotenv.config();
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/orders", orderRoutes);
 
-// DB connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log("DB error:", err));
+  .then(() => console.log("Mongo connected"))
+  .catch(err => console.log(err));
 
 app.get("/", (req, res) => {
-  res.send("API working");
+  res.send("API running");
 });
 
 app.listen(5000, () => {
-  console.log("Server running on port 5000");
+  console.log("Server running");
 });
