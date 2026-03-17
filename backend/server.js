@@ -1,18 +1,3 @@
-import dns from "dns";
-dns.setServers(["1.1.1.1", "8.8.8.8"]);
-
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import dotenv from "dotenv";
-import reviewRoutes from "./routes/reviewRoutes.js";
-
-dotenv.config();
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -32,7 +17,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/orders", orderRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("Mongo connected"))
+  .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
 app.get("/", (req, res) => {
@@ -40,5 +25,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(5000, () => {
-  console.log("Server running");
+  console.log("Server running on port 5000");
 });
