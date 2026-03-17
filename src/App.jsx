@@ -12,50 +12,61 @@ function App() {
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
   const [lastOrderCount, setLastOrderCount] = useState(0);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+
   const totalPrice = cart.reduce(
     (sum, item) => sum + item.price * item.qty,
     0
   );
 
   // ✅ Fetch orders (live sync)
-useEffect(() => {
-  const fetchOrders = async () => {
-    try {
-      const res = await fetch(
-        "https://smart-cafe-tiz3.onrender.com/api/reviews"
-      );
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await fetch(
+          "https://smart-cafe-tiz3.onrender.com/api/orders"
+        );
 
-      const data = await res.json();
-      setOrders(data);
+        const data = await res.json();
 
-    } catch (err) {
-      console.error("Failed", err);
-    }
-  };
+        if (data.length > lastOrderCount) {
+          const audio = new Audio("/notification.mp3");
+          audio.play().catch(() => {});
+        }
 
-  fetchOrders();
-}, []);
+        setLastOrderCount(data.length);
+        setOrders(data);
+
+      } catch (err) {
+        console.error("Failed to fetch orders", err);
+      }
+    };
 
     fetchOrders();
+
     const interval = setInterval(fetchOrders, 3000);
 
     return () => clearInterval(interval);
+
   }, [lastOrderCount]);
+
+
 
   // ✅ Update order status
   const updateStatus = async (orderId, newStatus) => {
     try {
-      await fetch("https://smart-cafe-tiz3.onrender.com", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: orderId,
-          status: newStatus,
-        }),
-      });
+      await fetch(
+        "https://smart-cafe-tiz3.onrender.com/api/orders",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: orderId,
+            status: newStatus,
+          }),
+        }
+      );
 
       setOrders(prev =>
         prev.map(order =>
@@ -70,30 +81,49 @@ useEffect(() => {
     }
   };
 
+
   // ✅ Add to cart
   const addToCart = (item) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(i => i.id === item.id);
+      const existingItem = prevCart.find(
+        i => i.id === item.id
+      );
 
       if (existingItem) {
         return prevCart.map(i =>
-          i.id === item.id ? { ...i, qty: i.qty + 1 } : i
+          i.id === item.id
+            ? { ...i, qty: i.qty + 1 }
+            : i
         );
       }
 
-      return [...prevCart, { ...item, qty: 1 }];
+      return [
+        ...prevCart,
+        { ...item, qty: 1 }
+      ];
     });
   };
 
+
   return (
     <div className="min-h-screen bg-amber-50 transition-all duration-500">
+
       <Navbar setPage={setPage} cart={cart} />
 
       {page === "home" && <Home setPage={setPage} />}
-      {page === "menu" && <Menu addToCart={addToCart} />}
-      {page === "cart" && (
-        <Cart cart={cart} setCart={setCart} setPage={setPage} />
+
+      {page === "menu" && (
+        <Menu addToCart={addToCart} />
       )}
+
+      {page === "cart" && (
+        <Cart
+          cart={cart}
+          setCart={setCart}
+          setPage={setPage}
+        />
+      )}
+
       {page === "checkout" && (
         <Checkout
           cart={cart}
@@ -103,6 +133,7 @@ useEffect(() => {
           setOrders={setOrders}
         />
       )}
+
       {page === "admin" && (
         <Admin
           orders={orders}
@@ -110,9 +141,11 @@ useEffect(() => {
           setPage={setPage}
         />
       )}
+
       {page === "reviews" && (
         <Reviews setPage={setPage} />
       )}
+
     </div>
   );
 }
