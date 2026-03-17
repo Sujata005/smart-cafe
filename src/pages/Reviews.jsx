@@ -9,7 +9,7 @@ const Reviews = ({ setPage }) => {
     reviews.length === 0
       ? 0
       : (
-        reviews.reduce((sum, r) => sum + Number(r.rating), 0) /
+        reviews.reduce((sum, r) => sum + Number(r?.rating || 0), 0) /
         reviews.length
       ).toFixed(1);
   useEffect(() => {
@@ -27,7 +27,9 @@ const Reviews = ({ setPage }) => {
     const response = await fetch("https://smart-cafe-tiz3.onrender.com/api/reviews", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, rating, comment })
+      body: JSON.stringify({ name, 
+                              rating: Number(rating),
+                              comment })
     });
 
     const data = await response.json();
