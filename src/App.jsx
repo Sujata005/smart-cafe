@@ -19,7 +19,7 @@ function App() {
   );
 
   // ✅ Fetch orders (live sync)
-  useEffect(() => {
+useEffect(() => {
   const fetchOrders = async () => {
     try {
       const res = await fetch(
@@ -30,7 +30,7 @@ function App() {
       setOrders(data);
 
     } catch (err) {
-      console.error(err);
+      console.error("Failed", err);
     }
   };
 
