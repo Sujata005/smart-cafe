@@ -22,7 +22,7 @@ function App() {
   useEffect(() => {
     const fetchOrders = async () => {
     try {
-      const res = await fetch("https://smart-cafe-tiz3.onrender.com/orders");
+      const res = await fetch("https://smart-cafe-tiz3.onrender.com/api/reviews");
       const data = await res.json();
 
       if (data.length > lastOrderCount) {
