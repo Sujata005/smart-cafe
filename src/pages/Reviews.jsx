@@ -24,7 +24,7 @@ const Reviews = ({ setPage }) => {
       return;
     }
 
-    const response = await fetch("https://smart-cafe-tiz3.onrender.com", {
+    const response = await fetch("http://localhost:5000/api/reviews", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, rating, comment })
