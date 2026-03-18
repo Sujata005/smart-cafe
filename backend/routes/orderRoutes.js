@@ -4,13 +4,21 @@ const router = express.Router();
 
 let orders = [];
 
+// GET orders
 router.get("/", (req, res) => {
   res.json(orders);
 });
 
+// POST order
 router.post("/", (req, res) => {
-  orders.push(req.body);
-  res.json({ success: true });
+  const order = req.body;
+
+  orders.push(order);
+
+  res.json({
+    success: true,
+    order,
+  });
 });
 
 export default router;
