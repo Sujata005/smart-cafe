@@ -8,15 +8,15 @@ const router = express.Router();
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-
+console.log("LOGIN TRY:", username, password);
     const admin = await Admin.findOne({ username });
-
+console.log("FOUND ADMIN:", admin);
     if (!admin) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const valid = await bcrypt.compare(password, admin.password);
-
+console.log("PASSWORD MATCH:", valid);
     if (!valid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
