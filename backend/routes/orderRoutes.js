@@ -34,4 +34,23 @@ router.post("/", async (req, res) => {
   }
 });
 
+// UPDATE order status
+router.put("/:id", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const updated = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    res.json(updated);
+
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+});
 export default router;

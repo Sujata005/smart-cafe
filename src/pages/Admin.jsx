@@ -21,12 +21,12 @@ const Admin = ({ orders, updateStatus, setPage }) => {
         <div className="grid gap-4">
           {orders.map((order) => (
             <div
-              key={order.id}
+              key={order._id}
               className="bg-white p-4 rounded-xl shadow-md"
             >
               <div className="flex justify-between">
                 <h2 className="font-semibold">
-                  Order #{order.id}
+                  Order #{order._id}
                 </h2>
                 <span className="text-sm text-gray-500">
                   ₹ {order.total}
@@ -44,7 +44,7 @@ const Admin = ({ orders, updateStatus, setPage }) => {
               <div className="flex gap-2 mt-3">
                 <button
                   onClick={() =>
-                    updateStatus(order.id, "Preparing")
+                    updateStatus(order._id, "Preparing")
                   }
                   className="bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm"
                 >
@@ -53,7 +53,7 @@ const Admin = ({ orders, updateStatus, setPage }) => {
 
                 <button
                   onClick={() =>
-                    updateStatus(order.id, "Ready")
+                    updateStatus(order._id, "Ready")
                   }
                   className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm"
                 >
@@ -62,7 +62,7 @@ const Admin = ({ orders, updateStatus, setPage }) => {
 
                 <button
                   onClick={() =>
-                    updateStatus(order.id, "Delivered")
+                    updateStatus(order._id, "Delivered")
                   }
                   className="bg-green-600 text-white px-3 py-1 rounded-lg text-sm"
                 >

@@ -55,15 +55,14 @@ function App() {
   const updateStatus = async (orderId, newStatus) => {
     try {
       await fetch(
-        "https://smart-cafe-tiz3.onrender.com/api/orders",
+        "https://smart-cafe-tiz3.onrender.com/api/orders/${orderId}",
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: orderId,
-            status: newStatus,
+            status: newStatus
           }),
         }
       );
