@@ -6,41 +6,37 @@ const Checkout = ({ cart, totalPrice, setPage, setCart, setOrders }) => {
   const placeOrder = async () => {
   try {
     console.log("🚀 Sending order...");
-    console.log("Sending order:", {
-      customerName,
-      phone,
-      cart,
-      totalPrice
-    });
-    const response = await fetch("https://smart-cafe-tiz3.onrender.com/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        items: cart,
-        total: totalPrice,
-        customerName,
-        phone
-      }),
-    });
+
+    const response = await fetch(
+      "https://smart-cafe-tiz3.onrender.com/api/orders",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: cart,
+          total: totalPrice,
+          customerName,
+          phone,
+        }),
+      }
+    );
 
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.message);
+      alert("Order failed");
       return;
     }
 
-    alert(
-      `Order placed 🎉\nPoints: ${data.loyalty.points}\n` +
-      (data.loyalty.reward ? `Reward: ${data.loyalty.reward}` : "")
-    );
+    // ✅ SAFE ALERT (no loyalty crash)
+    alert("Order placed 🎉");
 
-    setOrders((prev) => [...prev, data.order]);
+    setOrders((prev) => [...prev, data.order || data]);
 
-    setCart([]);          // CLEAR CART ✅
-    setPage("home");      // REDIRECT ✅
+    setCart([]);
+    setPage("home");
 
   } catch (error) {
     console.error("❌ Error:", error);
