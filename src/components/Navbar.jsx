@@ -1,42 +1,80 @@
 const Navbar = ({ setPage, cart }) => {
 const totalItems = cart?.reduce((sum, item) => sum + item.qty, 0) || 0;
   return (
-    <nav className="bg-white shadow-sm px-8 py-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold text-amber-900">
-        HiGa Café
+    <nav
+      className="
+      bg-amber-50/90
+      backdrop-blur-md
+      border-b border-amber-200
+      px-8 py-4
+      flex justify-between items-center
+      shadow-sm
+    "
+    >
+      {/* Logo */}
+      <h1
+        onClick={() => setPage("home")}
+        className="
+                    text-2xl font-semibold
+                   text-amber-900
+                    tracking-wide
+                    cursor-pointer
+                    hover:underline
+                    select-none
+                   hover:text-amber-700
+                    transition-colors
+                  "
+      >
+      HiGa Café
       </h1>
 
-      <div className="space-x-8 text-sm">
-        <button 
-            onClick={() => setPage("home")} 
-            className="text-amber-800 hover:text-amber-600"
+      {/* Links */}
+      <div className="flex items-center gap-6 text-sm font-medium">
+
+        <button
+          onClick={() => setPage("home")}
+          className="
+          text-amber-800
+          hover:text-amber-600
+          transition
+        "
         >
           Home
         </button>
-        <button 
-            onClick={() => setPage("menu")} 
-            className="text-amber-800 hover:text-amber-600"
+
+        <button
+          onClick={() => setPage("menu")}
+          className="
+          text-amber-800
+          hover:text-amber-600
+          transition
+        "
         >
           Menu
         </button>
-        {/* <button onClick={() => setPage("reviews")}>
-          Reviews ⭐
-        </button> */}
-        {/* <button
-          onClick={() => setPage("admin")}
-          className="bg-black text-white px-4 py-2 rounded-lg"
+
+        {/* Cart */}
+        <button
+          onClick={() => setPage("cart")}
+          className="
+          bg-amber-900
+          text-white
+          px-4 py-1.5
+          rounded-full
+          text-xs
+          shadow-sm
+          hover:shadow-md
+          hover:bg-amber-800
+          transition-all
+        "
         >
-          Admin Panel 👨‍🍳
-        </button> */}
-        <div
-            onClick={() => setPage("cart")}
-            className="bg-amber-900 text-white px-3 py-1 rounded-lg text-xs cursor-pointer"
-        >
-            Cart 🛒 {totalItems}
-        </div>
+          Cart 🛒 {totalItems}
+        </button>
+
       </div>
     </nav>
   );
 };
+
 
 export default Navbar;

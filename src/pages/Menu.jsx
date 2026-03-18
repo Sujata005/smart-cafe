@@ -47,7 +47,7 @@ const Menu = ({ addToCart }) => {
   const [activeTab, setActiveTab] = useState(categories[0]);
 
   return (
-    <div className="px-6 md:px-20 py-16 bg-gradient-to-b from-[#f8f5f1] to-[#efeae3] min-h-screen">
+    <div className="max-w-6xl mx-auto px-6 py-16 bg-gradient-to-b from-[#f8f5f1] to-[#efeae3] min-h-screen">
       
       {/* Heading */}
       <h1 className="text-3xl md:text-4xl font-bold text-center text-amber-900 mb-8">
@@ -81,14 +81,24 @@ const Menu = ({ addToCart }) => {
         {menuData[activeTab].map((item) => (
           <div
             key={item.id}
-            className="bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 p-5 group"
+            className="
+            bg-white/80
+            backdrop-blur-md
+            rounded-3xl
+            border border-amber-200
+            shadow-md
+            hover:shadow-xl
+            transition-all duration-300
+            p-5
+            group
+          "
           >
             {/* Image Placeholder */}
-            <div className="h-40 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl mb-4 flex items-center justify-center text-amber-700 font-semibold">
+            <div className="h-40 bg-gradient-to-br from-[#f5e6d8] to-[#ead7c4] rounded-2xl mb-4 flex items-center justify-center text-amber-700 font-semibold">
               Image Here
             </div>
 
-            <h3 className="text-lg font-semibold text-amber-900 mb-1">
+            <h3 className="text-lg font-semibold text-amber-700 mb-1 rounded-full font-medium tracking-wide">
               {item.name}
             </h3>
 
@@ -98,8 +108,10 @@ const Menu = ({ addToCart }) => {
 
             <button
               onClick={() => addToCart(item)}
-              className="w-full mt-3 bg-gradient-to-r from-amber-900 to-amber-700 text-white py-2 rounded-xl
-                          transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95"
+              className="w-full mt-3 bg-amber-900
+                        hover:bg-amber-800 text-white
+                        py-2 rounded-full font-medium
+                        tracking-wide transition shadow-sm hover:shadow-md"
             >
               Add to Cart
             </button>

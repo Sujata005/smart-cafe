@@ -66,9 +66,9 @@ const Home = ({ setPage }) => {
         {/* Hero Card */}
         <div className="
           backdrop-blur-2xl
-          bg-white/30
+          bg-white/40
           border border-white/20
-          shadow-[0_30px_90px_rgba(60,30,10,0.35)]
+          shadow-[0_30px_90px_rgba(60,30,10,0.25)]
           rounded-3xl
           px-12 md:px-16
           py-14 md:py-18
@@ -78,7 +78,7 @@ const Home = ({ setPage }) => {
           {/* Korean Logo */}
           <h1
             style={{ fontFamily: "Noto Sans KR" }}
-            className="text-3xl text-[#4A2F27] mb-2 tracking-wide text-5xl font-bold text-amber-900 drop-shadow-md animate-pulse"
+            className="text-3xl text-[#4A2F27] mb-2 tracking-wide text-5xl font-bold text-amber-900 drop-shadow-md"
           >
             히가
           </h1>
@@ -89,7 +89,7 @@ const Home = ({ setPage }) => {
             font-semibold
             tracking-tight
             text-[#4A2F27]
-            leading-tight text-5xl font-bold text-amber-900 drop-shadow-md animate-pulse
+            leading-tight text-5xl font-bold text-amber-900 drop-shadow-md 
           ">
             Welcome to <span className="italic">HiGa</span> ☕
           </h2>
@@ -185,7 +185,7 @@ const Home = ({ setPage }) => {
             backdrop-blur-md
             text-white
             shadow-md
-            hover:bg-white/30
+            hover:bg-white/40
             transition-all duration-300
           "
         >
