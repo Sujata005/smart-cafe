@@ -6,6 +6,8 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Admin from "./pages/Admin";
 import Reviews from "./pages/Reviews";
+import AdminLogin from "./pages/AdminLogin";
+
 
 function App() {
   const [page, setPage] = useState("home");
@@ -132,7 +134,9 @@ function App() {
           setOrders={setOrders}
         />
       )}
-
+      {page === "adminLogin" && (
+        <AdminLogin setPage={setPage} />
+      )}
       {page === "admin" && (
         <Admin
           orders={orders}
