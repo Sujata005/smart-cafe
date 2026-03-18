@@ -10,33 +10,38 @@ const Navbar = ({ setPage, cart }) => {
 
 
   // LONG PRESS START
-  const handleMouseDown = () => {
-    timerRef.current = setTimeout(() => {
+  const [longPress, setLongPress] = useState(false);
 
-      // vibration (mobile)
-      if (navigator.vibrate) {
-        navigator.vibrate(200);
-      }
+const handleMouseDown = () => {
+  setLongPress(false);
 
-      // show toast
-      setShowToast(true);
+  timerRef.current = setTimeout(() => {
 
-      setTimeout(() => {
-        setShowToast(false);
-        setPage("adminLogin");
-      }, 800);
+    setLongPress(true);
 
-    }, 1500);
-  };
+    if (navigator.vibrate) {
+      navigator.vibrate(200);
+    }
 
+    setShowToast(true);
 
-  const handleMouseUp = () => {
-    clearTimeout(timerRef.current);
-  };
+    setTimeout(() => {
+      setShowToast(false);
+      setPage("adminLogin");
+    }, 600);
 
-  const handleMouseLeave = () => {
-    clearTimeout(timerRef.current);
-  };
+  }, 800);
+};
+
+const handleMouseUp = () => {
+  clearTimeout(timerRef.current);
+};
+
+const handleClick = () => {
+  if (!longPress) {
+    setPage("home");
+  }
+};
 
 
   return (
@@ -55,10 +60,10 @@ const Navbar = ({ setPage, cart }) => {
 
         {/* Logo */}
         <h1
-          onClick={() => setPage("home")}
+          onClick={handleClick}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
+          onMouseLeave={handleMouseUp}
           className="
           text-2xl font-semibold
           text-amber-900
