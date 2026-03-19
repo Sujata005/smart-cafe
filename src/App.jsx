@@ -21,28 +21,31 @@ function App() {
   );
 
   // ✅ Fetch orders (live sync)
+  const fetchOrders = async () => {
+
+  try {
+
+    const res = await fetch(
+      "https://smart-cafe-tiz3.onrender.com/api/orders"
+    );
+
+    const data = await res.json();
+
+    if (data.length > lastOrderCount) {
+      const audio = new Audio("/notification.mp3");
+      audio.play().catch(() => {});
+    }
+
+    setLastOrderCount(data.length);
+    setOrders(data);
+
+  } catch (err) {
+    console.error("Failed to fetch orders", err);
+  }
+
+};
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await fetch(
-          "https://smart-cafe-tiz3.onrender.com/api/orders"
-        );
-
-        const data = await res.json();
-
-        if (data.length > lastOrderCount) {
-          const audio = new Audio("/notification.mp3");
-          audio.play().catch(() => {});
-        }
-
-        setLastOrderCount(data.length);
-        setOrders(data);
-
-      } catch (err) {
-        console.error("Failed to fetch orders", err);
-      }
-    };
-
+   
     fetchOrders();
 
     const interval = setInterval(fetchOrders, 3000);
@@ -51,37 +54,41 @@ function App() {
 
   }, [lastOrderCount]);
 
-
+useEffect(() => {
+  if (page === "admin") {
+    fetchOrders();
+  }
+}, [page]);
 
   // ✅ Update order status
   const updateStatus = async (orderId, newStatus) => {
-    try {
-      await fetch(
-        "https://smart-cafe-tiz3.onrender.com/api/orders/${orderId}",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status: newStatus
-          }),
-        }
-      );
+  try {
 
-      setOrders(prev =>
-        prev.map(order =>
-          order.id === orderId
-            ? { ...order, status: newStatus }
-            : order
-        )
-      );
+    await fetch(
+      `https://smart-cafe-tiz3.onrender.com/api/orders/${orderId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      }
+    );
 
-    } catch (err) {
-      console.error("Status update failed", err);
-    }
-  };
+    setOrders(prev =>
+      prev.map(order =>
+        order._id === orderId
+          ? { ...order, status: newStatus }
+          : order
+      )
+    );
 
+  } catch (err) {
+    console.error("Status update failed", err);
+  }
+};
 
   // ✅ Add to cart
   const addToCart = (item) => {
