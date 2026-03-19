@@ -29,13 +29,13 @@ const menuData = {
     { id: 19, name: "Paneer Wrap", price: 80 },
     { id: 20, name: "Chicken Wrap", price: 180 },
     { id: 21, name: "Veg Rice Bowl", price: 150 },
-    { id: 22, name: "Chicken Rice Bowl", price: 190 },
+    { id: 22, name: "Chicken Rice Bowl", price: 190, img: "chukenRiceBowl.png" },
     { id: 23, name: "Greek Salad", price: 160 },
-    { id: 24, name: "Peri Peri Steam Chicken", price: 230 },
+    { id: 24, name: "Peri Peri Steam Chicken", price: 230, img: "steamedChic" },
   ],
 
   "Patisserie": [
-    { id: 25, name: "Tiramisu", price: 160 },
+    { id: 25, name: "Tiramisu", price: 160, img: "tiramasu.png"},
     { id: 26, name: "Cheese Cake Bites", price: 80 },
     { id: 27, name: "Blueberry Cake", price: 90 },
     { id: 28, name: "Strawberry Shortcake", price: 80 },
@@ -44,80 +44,198 @@ const menuData = {
 
 const Menu = ({ addToCart }) => {
   const categories = Object.keys(menuData);
+
   const [activeTab, setActiveTab] = useState(categories[0]);
+  const [search, setSearch] = useState("");
+  const [animateId, setAnimateId] = useState(null);
+
+  const filtered =
+    menuData[activeTab].filter((i) =>
+      i.name.toLowerCase().includes(search.toLowerCase())
+    );
+
+  const handleAdd = (item) => {
+    addToCart(item);
+
+    setAnimateId(item.id);
+
+    const sound = new Audio("/click.mp3");
+    sound.play().catch(() => {});
+
+    setTimeout(() => setAnimateId(null), 500);
+  };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-16 bg-gradient-to-b from-[#f8f5f1] to-[#efeae3] min-h-screen">
-      
-      {/* Heading */}
-      <h1 className="text-3xl md:text-4xl font-bold text-center text-amber-900 mb-8">
-        Our Menu
-      </h1>
-      <p className="text-center text-amber-700 mb-12 tracking-widest uppercase text-sm">
-  Crafted with care
-      </p>
-      {/* Tabs */}
-      <div className="flex justify-center mb-14 hover:ring-2 hover:ring-amber-300">
-        <div className="flex flex-wrap gap-3 bg-white/60 backdrop-blur-lg p-2 rounded-full shadow-lg border border-amber-200">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveTab(category)}
-              className={`px-6 py-2 rounded-full text-sm md:text-base font-medium transition-all duration-300
-              ${
-                activeTab === category
-                  ? "bg-amber-900 text-white shadow-md scale-105"
-                  : "text-amber-900 hover:bg-amber-100"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-[#f6f2ec] to-[#e7ded2] px-6 py-16">
+
+      {/* TITLE */}
+      <div className="text-center mb-8">
+
+        <h1 className="text-5xl font-bold text-amber-900">
+           Menu
+        </h1>
+
+        <p className="tracking-[5px] text-amber-700 text-sm">
+          •comfort •care •compassion
+        </p>
+
       </div>
 
-      {/* Menu Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {menuData[activeTab].map((item) => (
+
+      {/* SEARCH */}
+      <div className="flex justify-center mb-10">
+
+        <input
+          placeholder="What you looking for 👀"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="
+            w-80 px-4 py-2
+            rounded-full
+            border border-amber-300
+            bg-white/70
+            backdrop-blur
+            focus:ring-2 focus:ring-amber-400
+          "
+        />
+
+      </div>
+
+
+      {/* TABS */}
+      <div className="flex justify-center mb-12">
+
+        <div className="
+          flex gap-3
+          bg-white/50
+          backdrop-blur-xl
+          border border-amber-200
+          p-2
+          rounded-full
+          shadow-lg
+        ">
+
+          {categories.map((cat) => (
+
+            <button
+              key={cat}
+              onClick={() => setActiveTab(cat)}
+              className={`
+                px-6 py-2 rounded-full
+                transition-all
+                ${
+                  activeTab === cat
+                    ? "bg-gradient-to-r from-amber-900 to-amber-700 text-white scale-110 shadow-lg"
+                    : "text-amber-900 hover:bg-amber-100"
+                }
+              `}
+            >
+              {cat}
+            </button>
+
+          ))}
+
+        </div>
+
+      </div>
+
+
+      {/* GRID */}
+      <div className="
+        grid
+        grid-cols-1
+        sm:grid-cols-2
+        md:grid-cols-3
+        gap-12
+        max-w-6xl
+        mx-auto
+      ">
+
+        {filtered.map((item) => (
+
           <div
             key={item.id}
             className="
-            bg-white/80
-            backdrop-blur-md
-            rounded-3xl
-            border border-amber-200
-            shadow-md
-            hover:shadow-xl
-            transition-all duration-300
-            p-5
-            group
-          "
+              rounded-3xl
+              overflow-hidden
+              bg-white/60
+              backdrop-blur-xl
+              border border-amber-200
+              shadow-md
+              hover:shadow-2xl
+              hover:-translate-y-2
+              transition-all
+              duration-500
+            "
           >
-            {/* Image Placeholder */}
-            <div className="h-40 bg-gradient-to-br from-[#f5e6d8] to-[#ead7c4] rounded-2xl mb-4 flex items-center justify-center text-amber-700 font-semibold">
-              Image Here
+
+            {/* IMAGE */}
+            <div className="h-52 overflow-hidden relative">
+
+              <img
+                src={`/images/menu/${item.img}`}
+                alt={item.name}
+                className="
+                  w-full h-full object-cover
+                  transition duration-700
+                  hover:scale-110
+                "
+              />
+
+              {/* <div className="
+                absolute top-3 left-3
+                bg-black/70
+                text-white text-xs
+                px-2 py-1
+                rounded-full
+              ">
+                ⭐ Popular
+              </div> */}
+
             </div>
 
-            <h3 className="text-lg font-semibold text-amber-700 mb-1 rounded-full font-medium tracking-wide">
-              {item.name}
-            </h3>
 
-            <p className="text-amber-700 font-medium mb-3">
-              ₹{item.price}
-            </p>
+            {/* CONTENT */}
+            <div className="p-5">
 
-            <button
-              onClick={() => addToCart(item)}
-              className="w-full mt-3 bg-amber-900
-                        hover:bg-amber-800 text-white
-                        py-2 rounded-full font-medium
-                        tracking-wide transition shadow-sm hover:shadow-md"
-            >
-              Add to Cart
-            </button>
+              <h3 className="text-xl font-semibold text-amber-900">
+                {item.name}
+              </h3>
+
+              <p className="text-amber-700 mb-4">
+                ₹ {item.price}
+              </p>
+
+
+              <button
+                onClick={() => handleAdd(item)}
+                className={`
+                  w-full py-2 rounded-full
+                  bg-gradient-to-r
+                  from-amber-900 to-amber-700
+                  text-white
+                  transition-all
+                  duration-300
+                  hover:scale-105
+                  hover:shadow-xl
+                  ${
+                    animateId === item.id
+                      ? "scale-110 ring-4 ring-amber-300"
+                      : ""
+                  }
+                `}
+              >
+                Add to Cart
+              </button>
+
+            </div>
+
           </div>
+
         ))}
+
       </div>
+
     </div>
   );
 };
