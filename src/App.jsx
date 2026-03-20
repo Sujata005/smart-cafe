@@ -54,6 +54,16 @@ const fetchOrders = async () => {
 };
 useEffect(() => {
 
+  const token = localStorage.getItem("adminToken");
+
+  if (token) {
+    setPage("admin");
+  }
+
+}, []);
+
+useEffect(() => {
+
   fetchOrders();
 
   const interval = setInterval(fetchOrders, 3000);
@@ -156,14 +166,16 @@ useEffect(() => {
       {page === "adminLogin" && (
         <AdminLogin setPage={setPage} />
       )}
-      {page === "admin" && (
+      {page === "admin" && token && (
         <Admin
           orders={orders}
           updateStatus={updateStatus}
           setPage={setPage}
         />
       )}
-
+      {page === "admin" && !token && (
+          <AdminLogin setPage={setPage} />
+      )}
       {page === "reviews" && (
         <Reviews setPage={setPage} />
       )}

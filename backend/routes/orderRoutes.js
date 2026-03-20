@@ -7,6 +7,8 @@ const router = express.Router();
 // GET all orders
 router.get("/", async (req, res) => {
 
+  res.set("Cache-Control", "no-store");
+
   const orders = await Order.find({
     status: { $ne: "Delivered" }
   }).sort({ createdAt: -1 });
