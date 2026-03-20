@@ -10,17 +10,21 @@ const menuData = {
     { id: 6, name: "Strawberry Smoothie", price: 95, img: "strawberry.png" },
     { id: 7, name: "Raspberry Smoothie", price: 95, img: "raspberry.png" },
     { id: 8, name: "Blueberry Smoothie", price: 95, img: "blueberry.png" },
+    { id: 29, name: "Watermelon Mojito", price: 45, img: "watermelonMojito.png" },
+    { id: 34, name: "Peach Mojito", price: 45, img: "peachMojito.png" },
   ],
 
   "Comfort Food": [
     { id: 9, name: "Salted Fries", price: 60, img: "salted.png" },
     { id: 10, name: "Peri Peri Fries", price: 95, img: "peri.png" },
+    { id: 31, name: "Fortnite Chicken Sandwich", price: 45, img: "chicFortSand.png" },
     { id: 11, name: "Pizza Margherita", price: 150, img: "pizzo.png" },
     { id: 12, name: "Cheese Garlic Maggi", price: 95, img: "cheeseGarlicMaggie.png" },
     { id: 13, name: "Vegetable Maggi", price: 85, img: "vegMaggie.png" },
     { id: 14, name: "Penne Arrabiata Pasta", price: 180, img: "penneArb.png" },
     { id: 15, name: "Pink Sauce Pasta", price: 190, img: "pink.png" },
     { id: 16, name: "Chicken Loaded Fries", price: 200, img: "chickFries.png" },
+    { id: 35, name: "Spaghetti Aglio e Olio", price: 45, img: "Spag.png" },
   ],
 
   "Healthy Food": [
@@ -31,7 +35,11 @@ const menuData = {
     { id: 21, name: "Veg Rice Bowl", price: 150, img: "vegBowl.png" },
     { id: 22, name: "Chicken Rice Bowl", price: 190, img: "chikenRiceBowl.png" },
     { id: 23, name: "Greek Salad", price: 160, img: "greek.png" },
+    { id: 36, name: "Vegetable Salad", price: 45, img: "vegeSalad.png" },
     { id: 24, name: "Peri Peri Steam Chicken", price: 230, img: "steamedChic.png" },
+    { id: 30, name: "Ceasre Salad", price: 45, img: "CeasreSalad.png" },
+    { id: 32, name: "Chicken Salad", price: 45, img: "chikenSalad.png" },
+    { id: 33, name: "Mexican Rice Bowl", price: 45, img: "MexicanRiceBowl.png" },
   ],
 
   "Patisserie": [
@@ -76,7 +84,7 @@ const Menu = ({ addToCart }) => {
         </h1>
 
         <p className="tracking-[5px] text-amber-700 text-sm">
-          •comfort •care •compassion
+          handcrafted with love
         </p>
 
       </div>
@@ -86,7 +94,7 @@ const Menu = ({ addToCart }) => {
       <div className="flex justify-center mb-10">
 
         <input
-          placeholder="What you looking for 👀"
+          placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="
