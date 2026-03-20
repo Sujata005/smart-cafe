@@ -34,9 +34,15 @@ const fetchOrders = async () => {
       o => o.status !== "Delivered"
     );
 
-    if (activeOrders.length > orders.length) {
+    const newOnes = active.filter(
+      o => !orders.some(p => p._id === o._id)
+    );
+
+    if (newOnes.length > 0) {
+
       const audio = new Audio("/notification.mp3");
       audio.play().catch(() => {});
+
     }
 
     setLastOrderCount(activeOrders.length);

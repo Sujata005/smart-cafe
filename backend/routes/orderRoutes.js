@@ -6,15 +6,13 @@ const router = express.Router();
 
 // GET all orders
 router.get("/", async (req, res) => {
-  try {
-    const orders = await Order.find().sort({
-      createdAt: -1,
-    });
 
-    res.json(orders);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+  const orders = await Order.find({
+    status: { $ne: "Delivered" }
+  }).sort({ createdAt: -1 });
+
+  res.json(orders);
+
 });
 
 
@@ -52,5 +50,28 @@ router.put("/:id", async (req, res) => {
       message: err.message,
     });
   }
+});
+router.patch("/:id", async (req, res) => {
+
+  try {
+
+    const { status } = req.body;
+
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status: status },
+      { new: true }
+    );
+
+    res.json(order);
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: "Update failed"
+    });
+
+  }
+
 });
 export default router;
