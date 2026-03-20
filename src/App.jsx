@@ -44,15 +44,15 @@ function App() {
   }
 
 };
-  useEffect(() => {
-   
-    fetchOrders();
+useEffect(() => {
 
-    const interval = setInterval(fetchOrders, 3000);
+  fetchOrders();
 
-    return () => clearInterval(interval);
+  const interval = setInterval(fetchOrders, 3000);
 
-  }, [lastOrderCount]);
+  return () => clearInterval(interval);
+
+}, []); // ✅ only once
 
 useEffect(() => {
   if (page === "admin") {
@@ -77,12 +77,15 @@ useEffect(() => {
       }
     );
 
+    // ✅ update + remove delivered
     setOrders(prev =>
-      prev.map(order =>
-        order._id === orderId
-          ? { ...order, status: newStatus }
-          : order
-      )
+      prev
+        .map(order =>
+          order._id === orderId
+            ? { ...order, status: newStatus }
+            : order
+        )
+        .filter(order => order.status !== "Delivered")
     );
 
   } catch (err) {

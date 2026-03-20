@@ -49,7 +49,7 @@ const Admin = ({ orders, updateStatus, setPage }) => {
 
         <div className="grid gap-4">
 
-          {orders.map((order) => {
+          {orders.filter(order => order.status !== "Delivered").map((order) => {
 
             const color = getTimeStatus(order.createdAt);
 
