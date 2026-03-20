@@ -34,7 +34,7 @@ const fetchOrders = async () => {
       o => o.status !== "Delivered"
     );
 
-    if (activeOrders.length > lastOrderCount) {
+    if (activeOrders.length > orders.length) {
       const audio = new Audio("/notification.mp3");
       audio.play().catch(() => {});
     }
@@ -79,16 +79,17 @@ useEffect(() => {
       }
     );
 
-    // ✅ update + remove delivered
-    setOrders(prev =>
-      prev
-        .map(order =>
-          order._id === orderId
-            ? { ...order, status: newStatus }
-            : order
-        )
-        .filter(order => order.status !== "Delivered")
-    );
+    // // ✅ update + remove delivered
+    // setOrders(prev =>
+    //   prev
+    //     .map(order =>
+    //       order._id === orderId
+    //         ? { ...order, status: newStatus }
+    //         : order
+    //     )
+    //     .filter(order => order.status !== "Delivered")
+    // );
+    fetchOrders();
 
   } catch (err) {
     console.error("Status update failed", err);

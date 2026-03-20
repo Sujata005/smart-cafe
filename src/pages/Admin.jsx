@@ -32,6 +32,30 @@ const getTimeInfo = (createdAt) => {
     color,
   };
 };
+const TimerIcon = ({ color }) => {
+
+  const c =
+    color === "red"
+      ? "#dc2626"
+      : color === "yellow"
+      ? "#eab308"
+      : "#16a34a";
+
+  return (
+
+    <svg
+      className="animate-spin"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill={c}
+    >
+      <path d="M6 2h12v2H6zM6 20h12v2H6zM12 6a6 6 0 1 0 0 12A6 6 0 0 0 12 6z"/>
+    </svg>
+
+  );
+};
+
 const Admin = ({ orders, updateStatus, setPage }) => {
 
   // newest first
@@ -131,16 +155,23 @@ const Admin = ({ orders, updateStatus, setPage }) => {
 
 
                 {/* timer */}
-                <p className={`flex items-center gap-2 font-semibold ${timerColor}`}>
+                const info = getTimeInfo(order.createdAt);
 
-                  <span className="animate-spin">
-                    ⏳
-                  </span>
+                <p
+                  className={`flex items-center gap-2 font-semibold ${
+                    info.color === "red"
+                    ? "text-red-600"
+                    : info.color === "yellow"
+                    ? "text-yellow-500"
+                    : "text-green-600"
+                  }`}
+                >
 
-                  {minutesLeft} min left
+                  <TimerIcon color={info.color} />
 
-                </p>
+                  {info.left} min left
 
+                  </p>
 
                 {/* buttons */}
                 <div className="flex gap-2 mt-3">
