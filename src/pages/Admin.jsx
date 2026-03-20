@@ -2,8 +2,6 @@ import React from "react";
 
 const getTimeStatus = (createdAt) => {
 
-  if (!createdAt) return "green";
-
   const now = new Date();
   const created = new Date(createdAt);
 
@@ -15,14 +13,46 @@ const getTimeStatus = (createdAt) => {
   return "red";
 };
 
+const getTimeInfo = (createdAt) => {
 
+  const now = new Date();
+  const created = new Date(createdAt);
+
+  const diff = (now - created) / 60000;
+
+  const left = Math.max(30 - diff, 0);
+
+  let color = "green";
+
+  if (diff >= 25 && diff < 30) color = "yellow";
+  if (diff >= 30) color = "red";
+
+  return {
+    left: left.toFixed(1),
+    color,
+  };
+};
 const Admin = ({ orders, updateStatus, setPage }) => {
 
+  // newest first
+  const sorted = [...orders].reverse();
+  const [, setTick] = React.useState(0);
+
+  React.useEffect(() => {
+
+    const t = setInterval(() => {
+      setTick(t => t + 1);
+    }, 1000);
+
+  return () => clearInterval(t);
+
+}, []);
   return (
+
     <div className="min-h-screen bg-amber-50 p-6">
 
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      {/* header */}
+      <div className="flex justify-between mb-6">
 
         <h1 className="text-3xl font-bold">
           Kitchen Dashboard 👨‍🍳
@@ -32,58 +62,56 @@ const Admin = ({ orders, updateStatus, setPage }) => {
           onClick={() => setPage("home")}
           className="bg-black text-white px-4 py-2 rounded-lg"
         >
-          Back to Café ☕
+          Back ☕
         </button>
 
       </div>
 
 
-      {/* No orders */}
-      {orders.length === 0 ? (
+      {sorted.length === 0 ? (
 
-        <p className="text-gray-500">
-          No orders yet 😌
-        </p>
+        <p>No orders</p>
 
       ) : (
 
         <div className="grid gap-4">
 
-          {orders.filter(order => order.status !== "Delivered").map((order) => {
+          {sorted.map(order => {
 
-            const color = getTimeStatus(order.createdAt);
+            const info = getTimeInfo(order.createdAt);
 
-            const timerColor =
-              color === "green"
-                ? "text-green-600"
-                : color === "yellow"
-                ? "text-yellow-500"
-                : "text-red-600";
+            const color = info.color;
+            const minutesLeft = info.left;
 
-
-            const cardBorder =
+            const border =
               color === "red"
-                ? "border-2 border-red-500"
+                ? "border-2 border-red-500 animate-pulse"
                 : color === "yellow"
                 ? "border-2 border-yellow-400"
                 : "border border-gray-200";
 
+            const timerColor =
+              color === "red"
+                ? "text-red-600"
+                : color === "yellow"
+                ? "text-yellow-500"
+                : "text-green-600";
 
             return (
 
               <div
                 key={order._id}
-                className={`bg-white p-4 rounded-xl shadow-md ${cardBorder}`}
+                className={`bg-white p-4 rounded-xl shadow-md ${border}`}
               >
 
                 {/* top */}
                 <div className="flex justify-between">
 
-                  <h2 className="font-semibold">
+                  <h2>
                     Order #{order._id.slice(-5)}
                   </h2>
 
-                  <span className="text-sm text-gray-500">
+                  <span>
                     ₹ {order.total}
                   </span>
 
@@ -91,11 +119,11 @@ const Admin = ({ orders, updateStatus, setPage }) => {
 
 
                 {/* items */}
-                <div className="mt-2">
+                <div>
 
-                  {order.items.map((item, index) => (
-                    <p key={index} className="text-sm">
-                      🍽 {item.name} × {item.qty}
+                  {order.items.map((i, idx) => (
+                    <p key={idx}>
+                      🍽 {i.name} × {i.qty}
                     </p>
                   ))}
 
@@ -103,10 +131,14 @@ const Admin = ({ orders, updateStatus, setPage }) => {
 
 
                 {/* timer */}
-                <p
-                  className={`mt-2 text-sm font-semibold ${timerColor}`}
-                >
-                  ⏳ Cooking timer running
+                <p className={`flex items-center gap-2 font-semibold ${timerColor}`}>
+
+                  <span className="animate-spin">
+                    ⏳
+                  </span>
+
+                  {minutesLeft} min left
+
                 </p>
 
 
@@ -117,7 +149,7 @@ const Admin = ({ orders, updateStatus, setPage }) => {
                     onClick={() =>
                       updateStatus(order._id, "Preparing")
                     }
-                    className="bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm"
+                    className="bg-yellow-500 text-white px-3 py-1 rounded"
                   >
                     Preparing
                   </button>
@@ -126,7 +158,7 @@ const Admin = ({ orders, updateStatus, setPage }) => {
                     onClick={() =>
                       updateStatus(order._id, "Ready")
                     }
-                    className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm"
+                    className="bg-blue-500 text-white px-3 py-1 rounded"
                   >
                     Ready
                   </button>
@@ -135,7 +167,7 @@ const Admin = ({ orders, updateStatus, setPage }) => {
                     onClick={() =>
                       updateStatus(order._id, "Delivered")
                     }
-                    className="bg-green-600 text-white px-3 py-1 rounded-lg text-sm"
+                    className="bg-green-600 text-white px-3 py-1 rounded"
                   >
                     Delivered
                   </button>
@@ -143,8 +175,7 @@ const Admin = ({ orders, updateStatus, setPage }) => {
                 </div>
 
 
-                {/* status */}
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs mt-2">
                   Status: {order.status}
                 </p>
 
@@ -159,6 +190,7 @@ const Admin = ({ orders, updateStatus, setPage }) => {
       )}
 
     </div>
+
   );
 };
 

@@ -21,28 +21,30 @@ function App() {
   );
 
   // ✅ Fetch orders (live sync)
-  const fetchOrders = async () => {
-
+const fetchOrders = async () => {
   try {
-
     const res = await fetch(
       "https://smart-cafe-tiz3.onrender.com/api/orders"
     );
 
     const data = await res.json();
 
-    if (data.length > lastOrderCount) {
+    // ✅ remove delivered here
+    const activeOrders = data.filter(
+      o => o.status !== "Delivered"
+    );
+
+    if (activeOrders.length > lastOrderCount) {
       const audio = new Audio("/notification.mp3");
       audio.play().catch(() => {});
     }
 
-    setLastOrderCount(data.length);
-    setOrders(data);
+    setLastOrderCount(activeOrders.length);
+    setOrders(activeOrders);
 
   } catch (err) {
     console.error("Failed to fetch orders", err);
   }
-
 };
 useEffect(() => {
 
