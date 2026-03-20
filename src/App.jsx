@@ -85,7 +85,7 @@ useEffect(() => {
     await fetch(
       `https://smart-cafe-tiz3.onrender.com/api/orders/${orderId}`,
       {
-        method: "PATCH",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },

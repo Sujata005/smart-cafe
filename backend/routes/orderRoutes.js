@@ -7,7 +7,10 @@ const router = express.Router();
 // GET all orders
 router.get("/", async (req, res) => {
 
-  res.set("Cache-Control", "no-store");
+  res.setHeader(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, private"
+  );
 
   const orders = await Order.find({
     status: { $ne: "Delivered" }

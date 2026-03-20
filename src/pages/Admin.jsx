@@ -155,7 +155,6 @@ const Admin = ({ orders, updateStatus, setPage }) => {
 
 
                 {/* timer */}
-                const info = getTimeInfo(order.createdAt);
 
                 <p
                   className={`flex items-center gap-2 font-semibold ${
