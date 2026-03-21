@@ -13,7 +13,6 @@ function App() {
   const [page, setPage] = useState("home");
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [lastOrderCount, setLastOrderCount] = useState(0);
   const token = localStorage.getItem("adminToken");
   const totalPrice = cart.reduce(
     (sum, item) => sum + item.price * item.qty,
@@ -22,19 +21,16 @@ function App() {
 
   // ✅ Fetch orders (live sync)
 const fetchOrders = async () => {
+
   try {
+
     const res = await fetch(
       "https://smart-cafe-tiz3.onrender.com/api/orders"
     );
 
     const data = await res.json();
 
-    // ✅ remove delivered here
-    const activeOrders = data.filter(
-      o => o.status !== "Delivered"
-    );
-
-    const newOnes = active.filter(
+    const newOnes = data.filter(
       o => !orders.some(p => p._id === o._id)
     );
 
@@ -45,12 +41,14 @@ const fetchOrders = async () => {
 
     }
 
-    setLastOrderCount(activeOrders.length);
-    setOrders(activeOrders);
+    setOrders(data);
 
   } catch (err) {
-    console.error("Failed to fetch orders", err);
+
+    console.log(err);
+
   }
+
 };
 useEffect(() => {
 

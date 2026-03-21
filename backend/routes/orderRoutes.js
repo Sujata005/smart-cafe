@@ -56,27 +56,5 @@ router.put("/:id", async (req, res) => {
     });
   }
 });
-router.patch("/:id", async (req, res) => {
 
-  try {
-
-    const { status } = req.body;
-
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status: status },
-      { new: true }
-    );
-
-    res.json(order);
-
-  } catch (err) {
-
-    res.status(500).json({
-      error: "Update failed"
-    });
-
-  }
-
-});
 export default router;
