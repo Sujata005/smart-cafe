@@ -31,7 +31,17 @@ const Checkout = ({ cart, totalPrice, setPage, setCart, setOrders }) => {
     }
 
     // ✅ SAFE ALERT (no loyalty crash)
-    alert("Order placed 🎉");
+    if (data.reward) {
+
+      alert(
+        `Order placed 🎉\nReward unlocked: ${data.reward}\nTotal orders: ${data.count}`
+      );
+
+    } else {
+
+      alert("Order placed 🎉");
+
+    }
 
     setOrders((prev) => [...prev, data.order || data]);
 

@@ -1,6 +1,6 @@
 import express from "express";
 import Order from "../models/Order.js";
-
+import Customer from "../models/Customer.js";
 const router = express.Router();
 
 
@@ -23,20 +23,59 @@ router.get("/", async (req, res) => {
 
 // CREATE order
 router.post("/", async (req, res) => {
+
   try {
+
     const order = new Order(req.body);
 
-    const saved = await order.save();
+    const savedOrder = await order.save();
 
-    res.status(201).json(saved);
+    // ===== LOYALTY =====
+
+    let customer = await Customer.findOne({
+      phone: req.body.phone,
+    });
+
+    if (!customer) {
+
+      customer = new Customer({
+        phone: req.body.phone,
+        name: req.body.customerName,
+        ordersCount: 0,
+      });
+
+    }
+
+    customer.ordersCount += 1;
+
+    await customer.save();
+
+    let reward = null;
+
+    if (customer.ordersCount === 5)
+      reward = "Free Drink ☕";
+
+    if (customer.ordersCount === 10)
+      reward = "Free Dessert 🍰";
+
+    if (customer.ordersCount === 15)
+      reward = "Free Meal 🍝";
+
+    res.json({
+      order: savedOrder,
+      reward,
+      count: customer.ordersCount,
+    });
 
   } catch (err) {
-    res.status(400).json({
+
+    res.status(500).json({
       message: err.message,
     });
-  }
-});
 
+  }
+
+});
 // UPDATE order status
 router.put("/:id", async (req, res) => {
   try {
