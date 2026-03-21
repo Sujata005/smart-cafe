@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
@@ -10,6 +10,7 @@ import AdminLogin from "./pages/AdminLogin";
 
 
 function App() {
+  const lastIdsRef = useRef([]);
   const [page, setPage] = useState("home");
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -30,16 +31,20 @@ const fetchOrders = async () => {
 
     const data = await res.json();
 
-    const newOnes = data.filter(
-      o => !orders.some(p => p._id === o._id)
+    const currentIds = data.map(o => o._id);
+
+    const newOnes = currentIds.filter(
+      id => !lastIdsRef.current.includes(id)
     );
 
-    if (newOnes.length > 0) {
+    if (newOnes.length > 0 && lastIdsRef.current.length > 0) {
 
       const audio = new Audio("/notification.mp3");
       audio.play().catch(() => {});
 
     }
+
+    lastIdsRef.current = currentIds;
 
     setOrders(data);
 
