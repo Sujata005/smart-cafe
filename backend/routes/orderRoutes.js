@@ -27,10 +27,9 @@ router.post("/", async (req, res) => {
   try {
 
     const order = new Order(req.body);
-
     const savedOrder = await order.save();
 
-    // ===== LOYALTY =====
+    // ===== LOYALTY PREMIUM =====
 
     let customer = await Customer.findOne({
       phone: req.body.phone,
@@ -41,30 +40,55 @@ router.post("/", async (req, res) => {
       customer = new Customer({
         phone: req.body.phone,
         name: req.body.customerName,
-        ordersCount: 0,
       });
 
     }
 
     customer.ordersCount += 1;
-
-    await customer.save();
+    customer.points += 1;
 
     let reward = null;
 
-    if (customer.ordersCount === 5)
+    if (
+      customer.ordersCount === 5 &&
+      !customer.rewards.includes("Free Drink")
+    ) {
       reward = "Free Drink ☕";
+      customer.rewards.push("Free Drink");
+    }
 
-    if (customer.ordersCount === 10)
+    if (
+      customer.ordersCount === 10 &&
+      !customer.rewards.includes("Free Dessert")
+    ) {
       reward = "Free Dessert 🍰";
+      customer.rewards.push("Free Dessert");
+    }
 
-    if (customer.ordersCount === 15)
+    if (
+      customer.ordersCount === 15 &&
+      !customer.rewards.includes("Free Meal")
+    ) {
       reward = "Free Meal 🍝";
+      customer.rewards.push("Free Meal");
+    }
+
+    if (
+      customer.ordersCount === 20 &&
+      !customer.rewards.includes("VIP")
+    ) {
+      reward = "VIP Customer ⭐";
+      customer.rewards.push("VIP");
+    }
+
+    await customer.save();
 
     res.json({
       order: savedOrder,
       reward,
       count: customer.ordersCount,
+      points: customer.points,
+      rewards: customer.rewards,
     });
 
   } catch (err) {

@@ -15,6 +15,16 @@ const customerSchema = new mongoose.Schema({
     default: 0,
   },
 
+  points: {
+    type: Number,
+    default: 0,
+  },
+
+  rewards: {
+    type: [String],
+    default: [],
+  },
+
 });
 
 export default mongoose.model(
