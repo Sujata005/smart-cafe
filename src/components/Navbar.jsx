@@ -109,6 +109,7 @@ const handleClick = () => {
           {/* Cart */}
           <button
             onClick={() => setPage("cart")}
+            data-testid="cart-count"
             className="
             bg-amber-900
             text-white

@@ -67,8 +67,16 @@ const Menu = ({ addToCart }) => {
 
     setAnimateId(item.id);
 
-    const sound = new Audio("/click.mp3");
-    sound.play().catch(() => {});
+    if (typeof Audio !== "undefined") {
+      try {
+        const sound = new Audio("/click.mp3");
+        if (sound.play) {
+          sound.play().catch(() => {});
+        }
+      } catch {
+        // ignore audio issues in test/edge env
+      }
+    }
 
     setTimeout(() => setAnimateId(null), 500);
   };
@@ -163,6 +171,7 @@ const Menu = ({ addToCart }) => {
 
           <div
             key={item.id}
+            data-testid="menu-item"
             className="
               rounded-3xl
               overflow-hidden
@@ -217,6 +226,7 @@ const Menu = ({ addToCart }) => {
 
               <button
                 onClick={() => handleAdd(item)}
+                data-testid="add-to-cart-button"
                 className={`
                   w-full py-2 rounded-full
                   bg-gradient-to-r

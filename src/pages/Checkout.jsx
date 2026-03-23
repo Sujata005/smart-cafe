@@ -1,34 +1,48 @@
 import { useState } from "react";
+import { apiFetch } from "../api";
 
 const Checkout = ({ cart, totalPrice, setPage, setCart, setOrders }) => {
   const [customerName, setCustomerName] = useState("");
   const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const placeOrder = async () => {
-  try {
-    console.log("🚀 Sending order...");
-
-    const response = await fetch(
-      "https://smart-cafe-tiz3.onrender.com/api/orders",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          items: cart,
-          total: totalPrice,
-          customerName,
-          phone,
-        }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      alert("Order failed");
+    if (!customerName || customerName.trim().length < 2) {
+      setError("Name must be at least 2 characters.");
       return;
     }
+
+    if (!phone.match(/^[0-9]{10}$/)) {
+      setError("Phone number must be 10 digits.");
+      return;
+    }
+
+    if (!cart || cart.length === 0) {
+      setError("Cart is empty. Add items before placing order.");
+      return;
+    }
+
+    if (cart.some(item => !item.qty || item.qty < 1)) {
+      setError("All cart items must have qty > 0.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    try {
+      console.log("🚀 Sending order...");
+
+    const data = await apiFetch("/orders", {
+      method: "POST",
+      body: {
+        items: cart,
+        total: totalPrice,
+        customerName,
+        phone,
+      },
+    });
 
     // ✅ SAFE ALERT (no loyalty crash)
     if (data.reward) {
@@ -49,11 +63,12 @@ const Checkout = ({ cart, totalPrice, setPage, setCart, setOrders }) => {
     setPage("home");
 
   } catch (error) {
-    console.error("❌ Error:", error);
-    alert("Order failed ❌");
-  }
-};
-
+      console.error("❌ Error:", error);
+      setError("Order failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-amber-50 p-6">
       <h1 className="text-3xl font-bold mb-6">Order Summary ☕</h1>
@@ -83,6 +98,7 @@ const Checkout = ({ cart, totalPrice, setPage, setCart, setOrders }) => {
           placeholder="Your Name"
           value={customerName}
           onChange={(e) => setCustomerName(e.target.value)}
+          data-testid="name"
           className="border p-2 rounded-lg w-full mb-2"
         />
 
@@ -91,14 +107,23 @@ const Checkout = ({ cart, totalPrice, setPage, setCart, setOrders }) => {
           placeholder="Phone Number"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
+          data-testid="phone"
           className="border p-2 rounded-lg w-full mb-3"
         />
 
+        {error && (
+          <p className="text-red-500 text-sm mb-2">{error}</p>
+        )}
+
         <button
           onClick={placeOrder}
-          className="mt-5 w-full bg-amber-900 text-white py-2 rounded-lg"
+          disabled={loading}
+          data-testid="submit-order"
+          className={`mt-5 w-full py-2 rounded-lg text-white ${
+            loading ? "bg-amber-500 cursor-not-allowed" : "bg-amber-900"
+          }`}
         >
-          Place Order 🚀
+          {loading ? "Placing order..." : "Place Order 🚀"}
         </button>
 
         <button

@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { apiFetch } from "../api";
 
 const Reviews = ({ setPage }) => {
   const [reviews, setReviews] = useState([]);
   const [name, setName] = useState("");
   const [rating, setRating] = useState("");
   const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const avgRating =
     reviews.length === 0
       ? 0
@@ -12,37 +15,51 @@ const Reviews = ({ setPage }) => {
         reviews.reduce((sum, r) => sum + Number(r?.rating || 0), 0) /
         reviews.length
       ).toFixed(1);
+
   useEffect(() => {
-    fetch("https://smart-cafe-tiz3.onrender.com/api/reviews")
-      .then(res => res.json())
-      .then(data => setReviews(data));
+    apiFetch("/reviews")
+      .then(data => setReviews(data))
+      .catch(() => {});
   }, []);
 
   const submitReview = async () => {
-    if (!name || !rating || !comment) {
-      alert("Please fill all fields");
+    if (!name || name.trim().length < 2) {
+      setError("Name must be at least 2 characters.");
       return;
     }
 
-    const response = await fetch("https://smart-cafe-tiz3.onrender.com/api/reviews", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, 
-                              rating: Number(rating),
-                              comment })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      alert(data.message);
+    if (!rating || rating < 1 || rating > 5) {
+      setError("Select a rating between 1 and 5.");
       return;
     }
 
-    setReviews(prev => [...prev, data]);
-    setName("");
-    setRating("");
-    setComment("");
+    if (!comment || comment.trim().length < 5) {
+      setError("Comment must contain at least 5 characters.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const data = await apiFetch("/reviews", {
+        method: "POST",
+        body: {
+          name,
+          rating: Number(rating),
+          comment,
+        },
+      });
+
+      setReviews(prev => [...prev, data]);
+      setName("");
+      setRating("");
+      setComment("");
+    } catch (e) {
+      setError(e.message || "Failed to post review");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -83,11 +100,14 @@ const Reviews = ({ setPage }) => {
           className="border p-2 rounded-lg w-full mb-3"
         />
 
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+
         <button
           onClick={submitReview}
-          className="bg-amber-900 text-white px-4 py-2 rounded-lg"
+          disabled={loading}
+          className={`px-4 py-2 rounded-lg text-white ${loading ? "bg-amber-500 cursor-not-allowed" : "bg-amber-900"}`}
         >
-          Submit Review ⭐
+          {loading ? "Submitting..." : "Submit Review ⭐"}
         </button>
       </div>
 
@@ -96,7 +116,7 @@ const Reviews = ({ setPage }) => {
       ) : (
         reviews.map(review => (
           <div
-            key={review.id}
+            key={review._id || review.id}
             className="bg-white p-4 rounded-xl shadow-md mb-4 hover:shadow-lg transition"
           >
             <h2 className="bg-white p-4 rounded-xl shadow-md mb-4 hover:shadow-lg transition animate-fade-in">

@@ -23,6 +23,23 @@ router.get("/", async (req, res) => {
 
 // CREATE order
 router.post("/", async (req, res) => {
+  const { items, total, customerName, phone } = req.body;
+
+  if (!Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ message: "Order must include at least one item." });
+  }
+
+  if (!customerName || customerName.trim().length < 2) {
+    return res.status(400).json({ message: "customerName must be at least 2 characters." });
+  }
+
+  if (!phone || !/^[0-9]{10}$/.test(phone)) {
+    return res.status(400).json({ message: "phone must be a 10 digit number." });
+  }
+
+  if (typeof total !== 'number' || total <= 0) {
+    return res.status(400).json({ message: "total must be a positive number." });
+  }
 
   try {
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../api";
 
 const backgrounds = [
   "/images/image1.png",
@@ -14,8 +15,7 @@ const Home = ({ setPage }) => {
 
   // Reviews
   useEffect(() => {
-    fetch("https://smart-cafe-tiz3.onrender.com/reviews")
-      .then(res => res.json())
+    apiFetch("/reviews")
       .then(data => setReviews(data))
       .catch(() => {});
   }, []);

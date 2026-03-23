@@ -1,8 +1,10 @@
-const Cart = ({ cart, setCart, setPage }) => {
+import { useMemo } from "react";
 
-  const totalPrice = cart.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
+const Cart = ({ cart, setCart, setPage }) => {
+  const totalPrice = useMemo(
+    () =>
+      cart.reduce((sum, item) => sum + item.price * item.qty, 0),
+    [cart]
   );
 
   const removeItem = (id) => {
@@ -18,29 +20,6 @@ const Cart = ({ cart, setCart, setPage }) => {
   };
 const handleCheckout = () => {
   setPage("checkout");
-};
-console.log(setPage);
-const placeOrder = async () => {
-  try {
-    const response = await fetch("https://smart-cafe-tiz3.onrender.com", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        items: cart,
-        total: totalPrice,
-      }),
-    });
-
-    const data = await response.json();
-    console.log("Order response:", data);
-
-    alert("Order placed successfully! 🎉");
-  } catch (error) {
-    console.error("Order error:", error);
-    alert("Failed to place order ❌");
-  }
 };
   return (
     <div className="p-8 max-w-2xl mx-auto">
@@ -65,9 +44,6 @@ const placeOrder = async () => {
                   ₹{item.price} × {item.qty}
                 </p>
               </div>
-              <button onClick={placeOrder}>
-                Place Order
-              </button>
               <button
                 onClick={() => removeItem(item.id)}
                 className="text-red-500 text-sm"
@@ -84,6 +60,7 @@ const placeOrder = async () => {
 
             <button 
                 onClick={handleCheckout}
+                data-testid="checkout-button"
                 className="mt-3 bg-amber-900 text-white px-5 py-2 rounded-lg"
             >
               Checkout

@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { apiFetch } from "../api";
 
-const AdminLogin = ({ setPage }) => {
+const AdminLogin = ({ setPage, setToken }) => {
 
   const [username,setUsername]=useState("");
   const [password,setPassword]=useState("");
@@ -12,27 +13,17 @@ const AdminLogin = ({ setPage }) => {
 
       setLoading(true);
 
-      const res = await fetch(
-        "https://smart-cafe-tiz3.onrender.com/api/auth/login",
-        {
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body: JSON.stringify({
-            username,
-            password
-          })
-        }
-      );
-
-      const data = await res.json();
+      const data = await apiFetch("/auth/login", {
+        method: "POST",
+        body: { username, password },
+      });
 
       console.log("LOGIN RESPONSE:", data);
 
       if (data.token) {
 
         localStorage.setItem("adminToken", data.token);
+        setToken(data.token);
 
         alert("Admin login success");
 

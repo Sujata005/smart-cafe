@@ -1,18 +1,5 @@
 import React from "react";
 
-const getTimeStatus = (createdAt) => {
-
-  const now = new Date();
-  const created = new Date(createdAt);
-
-  const diff = (now - created) / 60000;
-
-  if (diff < 25) return "green";
-  if (diff < 30) return "yellow";
-
-  return "red";
-};
-
 const getTimeInfo = (createdAt) => {
 
   const now = new Date();
@@ -56,7 +43,7 @@ const TimerIcon = ({ color }) => {
   );
 };
 
-const Admin = ({ orders, updateStatus, setPage }) => {
+const Admin = ({ orders, updateStatus, setPage, setToken }) => {
 
   // newest first
   const sorted = [...orders].reverse();
@@ -82,12 +69,25 @@ const Admin = ({ orders, updateStatus, setPage }) => {
           Kitchen Dashboard 👨‍🍳
         </h1>
 
-        <button
-          onClick={() => setPage("home")}
-          className="bg-black text-white px-4 py-2 rounded-lg"
-        >
-          Back ☕
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setPage("home")}
+            className="bg-black text-white px-4 py-2 rounded-lg"
+          >
+            Back ☕
+          </button>
+
+          <button
+            onClick={() => {
+              localStorage.removeItem("adminToken");
+              setToken(null);
+              setPage("home");
+            }}
+            className="bg-red-600 text-white px-4 py-2 rounded-lg"
+          >
+            Logout
+          </button>
+        </div>
 
       </div>
 
@@ -105,7 +105,6 @@ const Admin = ({ orders, updateStatus, setPage }) => {
             const info = getTimeInfo(order.createdAt);
 
             const color = info.color;
-            const minutesLeft = info.left;
 
             const border =
               color === "red"
@@ -113,13 +112,6 @@ const Admin = ({ orders, updateStatus, setPage }) => {
                 : color === "yellow"
                 ? "border-2 border-yellow-400"
                 : "border border-gray-200";
-
-            const timerColor =
-              color === "red"
-                ? "text-red-600"
-                : color === "yellow"
-                ? "text-yellow-500"
-                : "text-green-600";
 
             return (
 

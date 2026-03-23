@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
@@ -7,29 +8,25 @@ import Checkout from "./pages/Checkout";
 import Admin from "./pages/Admin";
 import Reviews from "./pages/Reviews";
 import AdminLogin from "./pages/AdminLogin";
+import { apiFetch } from "./api";
 
 
 function App() {
   const lastIdsRef = useRef([]);
-  const [page, setPage] = useState("home");
+  const [token, setToken] = useState(() => localStorage.getItem("adminToken"));
+  const [page, setPage] = useState(token ? "admin" : "home");
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
-  const token = localStorage.getItem("adminToken");
   const totalPrice = cart.reduce(
     (sum, item) => sum + item.price * item.qty,
     0
   );
 
   // ✅ Fetch orders (live sync)
+
 const fetchOrders = async () => {
-
   try {
-
-    const res = await fetch(
-      "https://smart-cafe-tiz3.onrender.com/api/orders"
-    );
-
-    const data = await res.json();
+    const data = await apiFetch("/orders");
 
     const currentIds = data.map(o => o._id);
 
@@ -56,23 +53,11 @@ const fetchOrders = async () => {
 
 };
 useEffect(() => {
-
-  const token = localStorage.getItem("adminToken");
-
-  if (token) {
-    setPage("admin");
-  }
-
-}, []);
-
-useEffect(() => {
-
   fetchOrders();
 
   const interval = setInterval(fetchOrders, 3000);
 
   return () => clearInterval(interval);
-
 }, []); // ✅ only once
 
 useEffect(() => {
@@ -85,29 +70,11 @@ useEffect(() => {
   const updateStatus = async (orderId, newStatus) => {
   try {
 
-    await fetch(
-      `https://smart-cafe-tiz3.onrender.com/api/orders/${orderId}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          status: newStatus,
-        }),
-      }
-    );
+    await apiFetch(`/orders/${orderId}`, {
+      method: "PUT",
+      body: { status: newStatus },
+    });
 
-    // // ✅ update + remove delivered
-    // setOrders(prev =>
-    //   prev
-    //     .map(order =>
-    //       order._id === orderId
-    //         ? { ...order, status: newStatus }
-    //         : order
-    //     )
-    //     .filter(order => order.status !== "Delivered")
-    // );
     fetchOrders();
 
   } catch (err) {
@@ -139,11 +106,12 @@ useEffect(() => {
 
 
   return (
-    <div className="min-h-screen bg-amber-50 transition-all duration-500">
+    <ErrorBoundary>
+      <div className="min-h-screen bg-amber-50 transition-all duration-500">
 
-      <Navbar setPage={setPage} cart={cart} />
+        <Navbar setPage={setPage} cart={cart} />
 
-      {page === "home" && <Home setPage={setPage} />}
+        {page === "home" && <Home setPage={setPage} />}
 
       {page === "menu" && (
         <Menu addToCart={addToCart} />
@@ -167,23 +135,25 @@ useEffect(() => {
         />
       )}
       {page === "adminLogin" && (
-        <AdminLogin setPage={setPage} />
+        <AdminLogin setPage={setPage} setToken={setToken} />
       )}
       {page === "admin" && token && (
         <Admin
           orders={orders}
           updateStatus={updateStatus}
           setPage={setPage}
+          setToken={setToken}
         />
       )}
       {page === "admin" && !token && (
-          <AdminLogin setPage={setPage} />
+          <AdminLogin setPage={setPage} setToken={setToken} />
       )}
       {page === "reviews" && (
         <Reviews setPage={setPage} />
       )}
 
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
 

@@ -22,12 +22,12 @@ console.log("PASSWORD MATCH:", valid);
     }
 
     const token = jwt.sign(
-      { id: admin._id },
+      { id: admin._id, username: admin.username },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.json({ token });
+    res.json({ token, user: { id: admin._id, username: admin.username } });
 
   } catch (err) {
     res.status(500).json({ message: err.message });
